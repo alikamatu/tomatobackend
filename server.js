@@ -1,34 +1,39 @@
-import express from 'express'
-import cors from 'cors'
-import { connectDB } from './config/db.js'
-import foodRouter from './routes/foodRoute.js'
-import userRouter from './routes/userRoute.js'
-import 'dotenv/config'
-import cartRouter from './routes/cartRoute.js'
-import orderRouter from './routes/orderRoute.js'
+import express from 'express';
+import cors from 'cors';
+import { connectDB } from './config/db.js';
+import foodRouter from './routes/foodRoute.js';
+import userRouter from './routes/userRoute.js';
+import cartRouter from './routes/cartRoute.js';
+import orderRouter from './routes/orderRoute.js';
+import 'dotenv/config'; // Import environment variables from .env
 
+// App configuration
+const app = express();
 
+// Middleware
+app.use(express.json());
+app.use(cors({
+    origin: ['https://your-production-domain.com'], // Replace with your trusted domain(s)
+}));
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data
 
-//app config
-const app = express()
+// Database connection
+connectDB(); // Ensure this function logs errors in case of failure
 
-//middleware
-app.use(express.json())
-app.use(cors("*"))
-app.use(express.urlencoded({ extended: true }));
+// API Endpoints
+app.use('/api/food/', foodRouter);
+app.use('/images', express.static('uploads')); // Serve static image files
+app.use('/api/user/', userRouter);
+app.use('/api/cart/', cartRouter);
+app.use('/api/order/', orderRouter);
 
-//DB connection
-connectDB();
+// Root route
+app.get('/', (req, res) => {
+    res.send('API is working');
+});
 
-//API endpoint
-app.use("/api/food/", foodRouter)
-app.use("/images", express.static('uploads'))
-app.use("/api/user/", userRouter)
-app.use("/api/cart/", cartRouter)
-app.use("/api/order/", orderRouter)
-
-
+// Server listening
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
