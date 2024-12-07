@@ -12,11 +12,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-    origin: ['https://food-develivery.vercel.app', 'https://fooddevelivery.vercel.app'], // List of allowed origins
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    credentials: true // Include cookies if required
-}));
+app.use(cors("*"));
 
 app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data
 
